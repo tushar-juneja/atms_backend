@@ -14,6 +14,7 @@ class Show extends Model
         'date_time',
         'artist',
         'published',
+        'show_manager_id',
     ];
 
     protected $casts = [
