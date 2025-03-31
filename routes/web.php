@@ -26,6 +26,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
+    Route::get('/admin/shows', [AudiSecController::class, 'listShows'])->name('admin.shows.index');
+
+    
+
     Route::get('/admin/show-managers', [AudiSecController::class, 'listShowManagers'])->name('admin.show_managers.index');
 
     Route::get('/admin/show-managers/create', [AudiSecController::class, 'createShowManager'])->name('admin.show_managers.create');

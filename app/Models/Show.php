@@ -21,4 +21,8 @@ class Show extends Model
         'date_time' => 'datetime',
         'published' => 'boolean',
     ];
+
+    public function showManager() {
+        return $this->belongsTo(User::class, 'show_manager_id');
+    }
 }

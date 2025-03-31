@@ -17,6 +17,12 @@ class AudiSecController extends Controller
         return view('admin.show_managers.index', compact('showManagers'));
     }
 
+    public function listShows()
+    {
+        $shows = Show::all();
+        return view('admin.shows.index', compact('shows'));
+    }
+
     // Other methods for show manager management (create, update, delete) can be added here
 
     public function createShowManager()

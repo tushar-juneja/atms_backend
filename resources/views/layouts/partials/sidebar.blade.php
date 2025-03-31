@@ -7,7 +7,7 @@
             <a class="nav-link text-white" href="{{ route('admin.show_managers.index') }}">Show Managers</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href="#">Shows</a>
+            <a class="nav-link text-white" href="{{ route('admin.shows.index') }}">Shows</a>
         </li>
     </ul>
 </nav>
