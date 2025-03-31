@@ -23,6 +23,32 @@ class AudiSecController extends Controller
         return view('admin.shows.index', compact('shows'));
     }
 
+    public function createShow()
+    {
+        $showManagers = User::where('role', 'show_manager')->get();
+        return view('admin.shows.create', compact('showManagers'));
+    }
+
+    public function storeShow(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'date_time' => 'required|date_format:Y-m-d\TH:i',
+            'artist' => 'required|string|max:255',
+            'show_manager_id' => 'required|exists:users,id',
+            'publish' => 'nullable|boolean',
+        ]);
+
+        $request['publish'] = isset($request['publish']) ? 1 : 0;
+
+        // Create and save the show in the database
+        Show::create($request->all());
+
+        // Redirect with success message
+        return redirect()->route('admin.shows.index')->with('success', 'Show created successfully!');
+    }
+
     // Other methods for show manager management (create, update, delete) can be added here
 
     public function createShowManager()

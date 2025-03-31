@@ -41,7 +41,7 @@
                                     <td>{{ $show->artist }}</td>
                                     <td>{{ $show->showManager->name }}</td>
                                     <td>
-                                        <a href="" class="btn btn-sm btn-primary">Edit</a>
+                                        <a href="{{ route('admin.shows.edit', ['id' => $show->id]) }}" class="btn btn-sm btn-primary">Edit</a>
                                         <a href="#" class="btn btn-sm btn-danger">Delete</a>
                                     </td>
                                 </tr>

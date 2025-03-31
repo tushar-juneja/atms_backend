@@ -27,7 +27,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/admin/shows', [AudiSecController::class, 'listShows'])->name('admin.shows.index');
-
+    Route::get('/admin/shows/create', [AudiSecController::class, 'createShow'])->name('admin.shows.create');
+    Route::post('/admin/shows/create', [AudiSecController::class, 'storeShow'])->name('admin.shows.store');
     
 
     Route::get('/admin/show-managers', [AudiSecController::class, 'listShowManagers'])->name('admin.show_managers.index');
