@@ -35,7 +35,7 @@
                                     <td>{{ $showManager->name }}</td>
                                     <td>{{ $showManager->email }}</td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-primary">Edit</a>
+                                        <a href="{{ route('admin.show_managers.edit', ['id' => $showManager->id]) }}" class="btn btn-sm btn-primary">Edit</a>
                                         <a href="#" class="btn btn-sm btn-danger">Delete</a>
                                     </td>
                                 </tr>

@@ -41,4 +41,30 @@ class ShowManagerController extends Controller
 
         return redirect()->route('admin.show_managers.index')->with('success', 'Show Manager Created Successfully!');
     }
+
+    public function edit($id)
+    {
+        $showManager = User::findOrFail($id);
+        return view('admin.show_managers.edit', compact('showManager'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $showManager = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'password' => 'nullable|min:6',
+        ]);
+
+        $showManager->name = $request->name;
+
+        if ($request->password) {
+            $showManager->password = Hash::make($request->password);
+        }
+
+        $showManager->save();
+
+        return redirect()->route('admin.show_managers.index', $id)->with('success', 'Show Manager Updated Successfully!');
+    }
 }

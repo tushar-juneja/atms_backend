@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/show-managers/create', [ShowManagerController::class, 'create'])->name('admin.show_managers.create');
     Route::post('/admin/show-managers/create', [ShowManagerController::class, 'store'])->name('admin.show_managers.store');
 
+    Route::get('/admin/show-managers/{id}/update', [ShowManagerController::class, 'edit'])->name('admin.show_managers.edit');
+    Route::put('/admin/show-managers/{id}', [ShowManagerController::class, 'update'])->name('admin.show_managers.update');
 
 });
 
