@@ -6,7 +6,7 @@
             <div class="container-fluid mt-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <h2>Shows</h2>
-                    <a href="" class="btn btn-primary"><i class="fas fa-plus"></i>
+                    <a href="{{ route('admin.shows.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i>
                         Create</a>
                 </div>
             </div>
@@ -35,11 +35,11 @@
                             @foreach ($shows as $show)
                                 <tr>
                                     <td>{{ $show->id }}</td>
-                                    <td>{{ $show->published ?? 'N/A' }}</td>
+                                    <td>{!! $show->published ? "<span class='text-success fw-bold'>Published</span>" : "<span class='text-danger fw-bold'>Unpublished</span>" !!}</td>
                                     <td>{{ $show->name }}</td>
                                     <td>{{ $show->date_time }}</td>
                                     <td>{{ $show->artist }}</td>
-                                    <td>{{ $show->showManager }}</td>
+                                    <td>{{ $show->showManager->name }}</td>
                                     <td>
                                         <a href="" class="btn btn-sm btn-primary">Edit</a>
                                         <a href="#" class="btn btn-sm btn-danger">Delete</a>
