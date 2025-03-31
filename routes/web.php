@@ -28,6 +28,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/admin/show-managers', [ShowManagerController::class, 'index'])->name('admin.show_managers.index');
 
+    Route::get('/admin/show-managers/create', [ShowManagerController::class, 'create'])->name('admin.show_managers.create');
+    Route::post('/admin/show-managers/create', [ShowManagerController::class, 'store'])->name('admin.show_managers.store');
+
+
 });
 
 require __DIR__.'/auth.php';

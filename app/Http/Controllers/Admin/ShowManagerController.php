@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class ShowManagerController extends Controller
 {
@@ -15,4 +16,29 @@ class ShowManagerController extends Controller
     }
 
     // Other methods for show manager management (create, update, delete) can be added here
+
+    public function create()
+    {
+        return view('admin.show_managers.create');
+    }
+
+    public function store(Request $request)
+    {
+        // Validate the form data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+        ]);
+
+        // Create a new Show Manager (Assuming 'role' column exists)
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'show_manager',
+        ]);
+
+        return redirect()->route('admin.show_managers.index')->with('success', 'Show Manager Created Successfully!');
+    }
 }
