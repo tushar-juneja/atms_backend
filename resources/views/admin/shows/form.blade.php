@@ -1,5 +1,5 @@
 <form
-    action="{{ route('admin.shows.store') }}"
+    action="{{ $edit ? route('admin.shows.update', $show->id) : route('admin.shows.store') }}"
     method="POST">
     @csrf
     @if ($edit)
@@ -39,7 +39,7 @@
 
     <div class="mb-3 form-check">
     <input type="checkbox" class="form-check-input" id="publish" name="publish"
-        {{ old('publish', $show->publish ?? false) ? 'checked' : '' }}
+        {{ old('publish', $show->publish ?? false) ? 'checked' : '' }} value="1"
         onclick="return confirm('Are you sure you want to ' + (this.checked ? 'publish' : 'unpublish') + ' this show?')">
     <label class="form-check-label" for="publish">Publish</label>
 </div>

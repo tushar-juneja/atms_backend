@@ -40,13 +40,42 @@ class AudiSecController extends Controller
             'publish' => 'nullable|boolean',
         ]);
 
-        $request['publish'] = isset($request['publish']) ? 1 : 0;
+        $request['published'] = isset($request['publish']) ? 1 : 0;
 
         // Create and save the show in the database
         Show::create($request->all());
 
         // Redirect with success message
         return redirect()->route('admin.shows.index')->with('success', 'Show created successfully!');
+    }
+
+    public function editShow($id)
+    {
+        $show = Show::findOrFail($id);
+        $showManagers = User::where('role', 'show_manager')->get();
+        return view('admin.shows.edit', compact('show', 'showManagers'));
+    }
+
+    public function updateShow(Request $request, $id)
+    {
+        $show = Show::findOrFail($id);
+
+        // Validate the incoming request data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'date_time' => 'required|date_format:Y-m-d\TH:i',
+            'artist' => 'required|string|max:255',
+            'show_manager_id' => 'required|exists:users,id',
+            'publish' => 'nullable|boolean',
+        ]);
+
+        $request['published'] = isset($request['publish']) ? 1 : 0;
+
+        // Update the show in the database
+        $show->update($request->all());
+
+        // Redirect with success message
+        return redirect()->route('admin.shows.index')->with('success', 'Show updated successfully!');
     }
 
     // Other methods for show manager management (create, update, delete) can be added here
