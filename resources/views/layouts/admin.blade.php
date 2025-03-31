@@ -55,7 +55,7 @@
 
         /* Active Effect */
         .sidebar .nav-link.active {
-            background-color: #0d6efd; /* Bootstrap Primary Blue */
+            background-color: #495057; /* Bootstrap Primary Blue */
             color: white;
             font-weight: bold;
         }
