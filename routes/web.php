@@ -26,13 +26,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::get('/admin/show-managers', [AudiSecController::class, 'index'])->name('admin.show_managers.index');
+    Route::get('/admin/show-managers', [AudiSecController::class, 'listShowManagers'])->name('admin.show_managers.index');
 
-    Route::get('/admin/show-managers/create', [AudiSecController::class, 'create'])->name('admin.show_managers.create');
-    Route::post('/admin/show-managers/create', [AudiSecController::class, 'store'])->name('admin.show_managers.store');
+    Route::get('/admin/show-managers/create', [AudiSecController::class, 'createShowManager'])->name('admin.show_managers.create');
+    Route::post('/admin/show-managers/create', [AudiSecController::class, 'storeShowManager'])->name('admin.show_managers.store');
 
-    Route::get('/admin/show-managers/{id}/update', [AudiSecController::class, 'edit'])->name('admin.show_managers.edit');
-    Route::put('/admin/show-managers/{id}', [AudiSecController::class, 'update'])->name('admin.show_managers.update');
+    Route::get('/admin/show-managers/{id}/update', [AudiSecController::class, 'editShowManager'])->name('admin.show_managers.edit');
+    Route::put('/admin/show-managers/{id}', [AudiSecController::class, 'updateShowManager'])->name('admin.show_managers.update');
 
 });
 

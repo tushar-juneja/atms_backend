@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 
 class AudiSecController extends Controller
 {
-    public function index()
+    public function listShowManagers()
     {
         $showManagers = User::where('role', 'show_manager')->get();
         return view('admin.show_managers.index', compact('showManagers'));
@@ -19,12 +19,12 @@ class AudiSecController extends Controller
 
     // Other methods for show manager management (create, update, delete) can be added here
 
-    public function create()
+    public function createShowManager()
     {
         return view('admin.show_managers.create');
     }
 
-    public function store(Request $request)
+    public function storeShowManager(Request $request)
     {
         // Validate the form data
         $request->validate([
@@ -44,13 +44,13 @@ class AudiSecController extends Controller
         return redirect()->route('admin.show_managers.index')->with('success', 'Show Manager Created Successfully!');
     }
 
-    public function edit($id)
+    public function editShowManager($id)
     {
         $showManager = User::findOrFail($id);
         return view('admin.show_managers.edit', compact('showManager'));
     }
 
-    public function update(Request $request, $id)
+    public function updateShowManager(Request $request, $id)
     {
         $showManager = User::findOrFail($id);
 
