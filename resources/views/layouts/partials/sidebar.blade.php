@@ -4,7 +4,7 @@
             <a class="nav-link text-white" href="#">Dashboard</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href="#">Show Managers</a>
+            <a class="nav-link text-white" href="{{ route('admin.show_managers.index') }}">Show Managers</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-white" href="#">Shows</a>
