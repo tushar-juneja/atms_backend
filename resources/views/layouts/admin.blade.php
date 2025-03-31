@@ -21,6 +21,14 @@
     {{-- @vite(['resources/js/app.js', 'resources/css/app_output.css']) --}}
 
     <style>
+        body{
+            background-color: #f5f8fa;
+        }
+        .card{
+            box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
+            border: none;
+            border-radius: 5px;
+        }
         .nav-item {
             padding-block: 10px;
         }
