@@ -14,6 +14,7 @@ class ShowSeat extends Model
         'seat_id',
         'price',
         'is_reserved',
+        'seat_type'
     ];
 
     protected $casts = [
