@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AudiSecController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,21 +27,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::get('/admin/shows', [AudiSecController::class, 'listShows'])->name('admin.shows.index');
-    Route::get('/admin/shows/create', [AudiSecController::class, 'createShow'])->name('admin.shows.create');
-    Route::post('/admin/shows/create', [AudiSecController::class, 'storeShow'])->name('admin.shows.store');
-    Route::get('/admin/shows/{id}/update', [AudiSecController::class, 'editShow'])->name('admin.shows.edit');
-    Route::put('/admin/shows/{id}', [AudiSecController::class, 'updateShow'])->name('admin.shows.update');
-    
+    Route::middleware('role:audi_sec')->group(function () {
+        Route::get('/admin/shows', [AudiSecController::class, 'listShows'])->name('admin.shows.index');
+        Route::get('/admin/shows/create', [AudiSecController::class, 'createShow'])->name('admin.shows.create');
+        Route::post('/admin/shows/create', [AudiSecController::class, 'storeShow'])->name('admin.shows.store');
+        Route::get('/admin/shows/{id}/update', [AudiSecController::class, 'editShow'])->name('admin.shows.edit');
+        Route::put('/admin/shows/{id}', [AudiSecController::class, 'updateShow'])->name('admin.shows.update');
+        
 
-    Route::get('/admin/show-managers', [AudiSecController::class, 'listShowManagers'])->name('admin.show_managers.index');
+        Route::get('/admin/show-managers', [AudiSecController::class, 'listShowManagers'])->name('admin.show_managers.index');
 
-    Route::get('/admin/show-managers/create', [AudiSecController::class, 'createShowManager'])->name('admin.show_managers.create');
-    Route::post('/admin/show-managers/create', [AudiSecController::class, 'storeShowManager'])->name('admin.show_managers.store');
+        Route::get('/admin/show-managers/create', [AudiSecController::class, 'createShowManager'])->name('admin.show_managers.create');
+        Route::post('/admin/show-managers/create', [AudiSecController::class, 'storeShowManager'])->name('admin.show_managers.store');
 
-    Route::get('/admin/show-managers/{id}/update', [AudiSecController::class, 'editShowManager'])->name('admin.show_managers.edit');
-    Route::put('/admin/show-managers/{id}', [AudiSecController::class, 'updateShowManager'])->name('admin.show_managers.update');
-
+        Route::get('/admin/show-managers/{id}/update', [AudiSecController::class, 'editShowManager'])->name('admin.show_managers.edit');
+        Route::put('/admin/show-managers/{id}', [AudiSecController::class, 'updateShowManager'])->name('admin.show_managers.update');
+    });
 });
 
 require __DIR__.'/auth.php';
