@@ -17,25 +17,55 @@
         rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
     {{-- @vite(['resources/js/app.js', 'resources/css/app_output.css']) --}}
 
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=chair" />
     <style>
-        body{
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 10
+        }
+
+        .material-symbols-outlined-hover {
+            font-variation-settings:
+                'FILL' 1;
+            color: lightblue;
+        }
+
+        .material-symbols-outlined-filled {
+            font-variation-settings:
+                'FILL' 1;
+            color: #126985ad;
+        }
+    </style>
+
+    <style>
+        body {
             background-color: #f5f8fa;
         }
-        .card{
+
+        .card {
             box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
             border: none;
             border-radius: 5px;
         }
+
         .nav-item {
             padding-block: 10px;
         }
+
         .sidebar {
             width: 250px;
             height: 100vh;
-            background-color: #343a40; /* Dark background */
+            background-color: #343a40;
+            /* Dark background */
             padding: 15px;
         }
 
@@ -49,17 +79,21 @@
 
         /* Hover Effect */
         .sidebar .nav-link:hover {
-            background-color: #495057; /* Slightly lighter dark */
-            color: #f8f9fa; /* Light text */
+            background-color: #495057;
+            /* Slightly lighter dark */
+            color: #f8f9fa;
+            /* Light text */
         }
 
         /* Active Effect */
         .sidebar .nav-link.active {
-            background-color: #495057; /* Bootstrap Primary Blue */
+            background-color: #495057;
+            /* Bootstrap Primary Blue */
             color: white;
             font-weight: bold;
         }
     </style>
+    @yield('styles')
 </head>
 
 
@@ -89,5 +123,8 @@
     </div>
 
 </body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+@yield('scripts')
 
 </html>

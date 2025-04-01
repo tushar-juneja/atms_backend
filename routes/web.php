@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AudiSecController;
+use App\Http\Controllers\Admin\ShowManagerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
@@ -26,8 +27,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+
+    Route::middleware(['roleRedirect', 'role:audi_sec'])->group(function () {
+        Route::get('/admin/shows', [AudiSecController::class, 'listShows'])->name('admin.shows.index');
+    });
+
     Route::middleware('role:audi_sec')->group(function () {
-        Route::get('/admin/shows', [AudiSecController::class, 'listShows'])->name('admin.shows.index')->middleware('roleRedirect');
         Route::get('/admin/shows/create', [AudiSecController::class, 'createShow'])->name('admin.shows.create');
         Route::post('/admin/shows/create', [AudiSecController::class, 'storeShow'])->name('admin.shows.store');
         Route::get('/admin/shows/{id}/update', [AudiSecController::class, 'editShow'])->name('admin.shows.edit');
@@ -41,6 +46,15 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/admin/show-managers/{id}/update', [AudiSecController::class, 'editShowManager'])->name('admin.show_managers.edit');
         Route::put('/admin/show-managers/{id}', [AudiSecController::class, 'updateShowManager'])->name('admin.show_managers.update');
+    });
+
+    Route::middleware(['roleRedirect', 'role:show_manager'])->group(function () {
+        Route::get('/admin/shows', [ShowManagerController::class, 'listShows'])->name('admin.shows.index');
+    });
+
+    Route::middleware('role:show_manager')->group(function () {
+        Route::get('/admin/shows/{show}/configure', [ShowManagerController::class, 'configureShow'])->name('show_manager.shows.configure');
+        Route::post('/admin/shows/{show}/configure', [ShowManagerController::class, 'updateSeatingConfiguration'])->name('show_manager.shows.update_seating_config');
     });
 });
 

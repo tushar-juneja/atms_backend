@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // This will return all the assigned shows to the user (show manager)
+    public function shows() {
+        return $this->hasMany(Show::class, 'show_manager_id');
+    }
 }
