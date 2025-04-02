@@ -50,10 +50,11 @@
                 <div class="mt-5">
                     <h5 class="text-center">Tickets Configuration</h5>
 
-                    <form action="{{ route('show_manager.shows.reset_seats_config', $show->id) }}" method="POST" id="reset-seat-config-form">
+                    <form action="{{ route('show_manager.shows.reset_seats_config', $show->id) }}" method="POST"
+                        id="reset-seat-config-form">
                         @csrf
                         @method('DELETE')
-                            <button type="button" id="reset-seats" class="btn btn-danger">Reset Configuration</button>
+                        <button type="button" id="reset-seats" class="btn btn-danger">Reset Configuration</button>
                     </form>
 
                     <form action="{{ route('show_manager.shows.update_seating_config', $show) }}" method="POST">
@@ -61,16 +62,6 @@
 
                         <div class="d-flex w-100 justify-content-center mt-4">
                             <div class="layout d-flex flex-column col-12" style="max-width: 80%;">
-                                {{-- <div class="column_no d-flex mb-2" style="margin-left: 37px;">
-                                        @for ($i = 0; $i < $config['rows'] / $config['break_at']; $i++)
-                                            <div class="column_no_row" style="margin-right: 55px;">
-                                                @for ($j = 1; $j <= $config['break_at']; $j++)
-                                                    <span class="row_no" style="{{ $j == 1 ? '' : 'margin-left: 13.5px;'}}">{{ $j }}</span>
-                                                @endfor
-                                            </div>
-                                        @endfor
-                                    </div> --}}
-
                                 <div>
 
                                     @php $row = 'A'; @endphp
@@ -103,10 +94,12 @@
                                                 <input type="number" style="max-width: 150px;"
                                                     name="rows[{{ $row }}][price]" class="row-price form-control"
                                                     data-row="{{ $row }}"
-                                                    placeholder="Row {{ $row }} Price">
+                                                    placeholder="Row {{ $row }} Price"
+                                                    value="{{ $rows[$row]['price'] ?? '' }}">
                                                 <input type="checkbox" class="row-vip form-check-input"
                                                     name="rows[{{ $row }}][vip]" data-row="{{ $row }}"
-                                                    data-bs-toggle="tooltip" title="Mark Row for VIP">
+                                                    data-bs-toggle="tooltip" title="Mark Row for VIP"
+                                                    {{ ($rows[$row]['is_reserved'] ?? false) ? 'checked' : '' }}>
                                             </div>
                                             @php $row++; @endphp
 
@@ -143,10 +136,12 @@
                                                 <input type="number" style="max-width: 150px;"
                                                     class="row-price form-control" data-row="{{ $row }}"
                                                     name="rows[{{ $row }}][price]"
-                                                    placeholder="Row {{ $row }} Price">
+                                                    placeholder="Row {{ $row }} Price"
+                                                    value="{{ $rows[$row]['price'] ?? '' }}">
                                                 <input type="checkbox" class="row-vip form-check-input"
                                                     name="rows[{{ $row }}][vip]" data-row="{{ $row }}"
-                                                    data-toggle="tooltip" title="Mark Row for VIP">
+                                                    data-toggle="tooltip" title="Mark Row for VIP"
+                                                    {{ ($rows[$row]['is_reserved'] ?? false) ? 'checked' : '' }}>
                                             </div>
                                             @php $row++; @endphp
                                         </div>
@@ -155,6 +150,10 @@
                                 </div>
                             </div>
                         </div>
+
+
+
+
                         <div class="d-flex justify-content-end mr-4">
                             <input type="Submit" value="Save" class="btn btn-primary">
                         </div>
@@ -170,15 +169,29 @@
     <script>
         $(document).ready(function() {
 
+            @if (!empty($rows))
+                var reservedRows = @json($rows); // Convert PHP array to JavaScript object
+
+                $.each(reservedRows, function(rowIdentifier, rowConfig) {
+                    // Target the row's price input and disable it
+                    if(rowConfig.is_reserved) {
+                        $('input[data-row="' + rowIdentifier + '"][name$="[price]"]').prop('disabled', true);
+                        $('span.seat-icon[data-row="' + rowIdentifier + '"]')
+                            .addClass('vip-row') // Add your 'vip-row' class for styling
+                            .off('mouseenter mouseleave click'); // Disable any hover/click interactions
+                    }
+                });
+            @endif
+
             $('.row-vip').on('change', function() {
                 const row = $(this).data('row');
-                const isVip = $(this).prop('checked');
+                const isVip = $(this).attr('checked');
 
-                if (confirm(`Are you sure you want to reserve all seats of row ${row}?`)) {
+                if (confirm(`Are you sure you want to ${isVip ? 'unreserve' : 'reserve'} all seats of row ${row}?`)) {
                     const rowPriceInput = $(`.row-price[data-row="${row}"]`);
                     const seatIcons = $(`.seat-icon[data-row="${row}"]`);
 
-                    if (isVip) {
+                    if (!isVip) {
                         rowPriceInput.prop('disabled', true);
                         seatIcons.addClass('vip-row').off('mouseenter mouseleave click');
                     } else {

@@ -23,6 +23,48 @@ class ShowManagerController extends Controller
         return view('show_managers.shows.index', compact('shows'));
     }
 
+    private function getSeatRowConfiguration($allSeats)
+    {
+        $showConfig = config('auditorium');
+
+        $rowsWithOneSeat = [];
+        $seatIndex = 0;
+        $rowIdentifier = 'A';
+
+        // 4. Logic for balcony rows
+        for ($i = 0; $i < $showConfig['balcony_rows']; $i++) {
+            // Skip seats until the start of the current row
+            $seatsToSkip = $i * $showConfig['seats_per_row'];
+            $currentRowSeats = $allSeats->skip($seatsToSkip)->take($showConfig['seats_per_row']);
+
+            // Take the first seat of the current row if it exists
+            if ($currentRowSeats->isNotEmpty()) {
+                $rowsWithOneSeat[$rowIdentifier] = $currentRowSeats->first();
+            } else {
+                $rowsWithOneSeat[$rowIdentifier] = null; // Or some other placeholder
+            }
+            $rowIdentifier++;
+        }
+
+        // 5. Logic for ordinary rows
+        for ($i = 0; $i < $showConfig['rows'] - $showConfig['balcony_rows']; $i++) {
+            // Skip seats, accounting for balcony rows
+            $seatsToSkip = $showConfig['balcony_rows'] * $showConfig['seats_per_row'] + $i * $showConfig['seats_per_row'];
+            $currentRowSeats = $allSeats->skip($seatsToSkip)->take($showConfig['seats_per_row']);
+
+            // Take the first seat of the current row if it exists
+            if ($currentRowSeats->isNotEmpty()) {
+                $rowsWithOneSeat[$rowIdentifier] = $currentRowSeats->first();
+            } else {
+                $rowsWithOneSeat[$rowIdentifier] = null; // Or some other placeholder
+            }
+            $rowIdentifier++;
+        }
+
+        return $rowsWithOneSeat;
+    }
+
+
     public function configureShow(Show $show)
     {
         $config = config('auditorium');
@@ -34,9 +76,14 @@ class ShowManagerController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        // dd($show->seats);
+        $allSeats = $show->seats;
 
-        return view('show_managers.shows.configure', compact('show', 'config'));
+        $rows = [];
+
+        if ($allSeats->isNotEmpty()) {
+            $rows = $this->getSeatRowConfiguration($allSeats);
+        }
+        return view('show_managers.shows.configure', compact('show', 'config', 'rows'));
     }
 
     public function updateSeatingConfiguration(Request $request, Show $show)

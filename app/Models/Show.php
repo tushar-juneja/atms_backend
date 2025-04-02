@@ -25,4 +25,8 @@ class Show extends Model
     public function showManager() {
         return $this->belongsTo(User::class, 'show_manager_id');
     }
+
+    public function seats() {
+        return $this->hasMany(ShowSeat::class);
+    }
 }
