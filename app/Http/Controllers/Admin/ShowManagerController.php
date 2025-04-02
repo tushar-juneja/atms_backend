@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\DB; // Import DB facade
 
 class ShowManagerController extends Controller
 {
-
     public function listShows()
     {
         $user = auth()->user();
@@ -34,6 +33,8 @@ class ShowManagerController extends Controller
         if ($show->show_manager_id !== $user->id) {
             abort(403, 'Unauthorized');
         }
+
+        // dd($show->seats);
 
         return view('show_managers.shows.configure', compact('show', 'config'));
     }
@@ -68,7 +69,7 @@ class ShowManagerController extends Controller
                         'seat_id' => $seat++,
                         'seat_type' => $rowData['balcony'] ? 'balcony' : 'ordinary',
                         'price' => $rowData['price'] ?? 0,
-                        'is_reserved' => isset($rowData['vip']) ? 1 : 0,
+                        'is_reserved' => $rowData['vip'] == 'on' ? 1 : 0,
                     ]);
                 }
             }
@@ -77,7 +78,9 @@ class ShowManagerController extends Controller
             return redirect()->route('show_manager.shows.configure', $show->id)->with('success', 'Seats configuration saved successfully!');
         } catch (\Exception $e) {
             DB::rollback(); // Rollback in case of error
-            return redirect()->route('show_manager.shows.configure', $show->id)->with('failure', 'Error saving seats configuration: ' . $e->getMessage());
+            return redirect()
+                ->route('show_manager.shows.configure', $show->id)
+                ->with('failure', 'Error saving seats configuration: ' . $e->getMessage());
         }
     }
 
@@ -99,7 +102,9 @@ class ShowManagerController extends Controller
             return redirect()->back()->with('success', 'Seats configuration reset successfully!');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'An error occurred during reset: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'An error occurred during reset: ' . $e->getMessage());
         }
     }
 }
