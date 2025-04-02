@@ -33,6 +33,11 @@
             color: grey;
             pointer-events: none;
         }
+
+        #reset-seat-config-form {
+            float: right;
+            margin-block: 20px;
+        }
     </style>
 @endsection
 
@@ -44,6 +49,12 @@
 
                 <div class="mt-5">
                     <h5 class="text-center">Tickets Configuration</h5>
+
+                    <form action="{{ route('show_manager.shows.reset_seats_config', $show->id) }}" method="POST" id="reset-seat-config-form">
+                        @csrf
+                        @method('DELETE')
+                            <button type="button" id="reset-seats" class="btn btn-danger">Reset Configuration</button>
+                    </form>
 
                     <form action="{{ route('show_manager.shows.update_seating_config', $show) }}" method="POST">
                         @csrf
@@ -194,6 +205,13 @@
                 $(this).removeClass('material-symbols-outlined-hover'); // Change color on hover
             });
 
+            $('#reset-seats').click(function() {
+                if (confirm(
+                        'Are you sure you want to reset all seat configurations? This action cannot be undone.'
+                    )) {
+                    $('#reset-seat-config-form').submit();
+                }
+            });
             // ... (Your existing code for VIP button click) ...
         });
     </script>

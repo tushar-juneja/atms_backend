@@ -74,10 +74,32 @@ class ShowManagerController extends Controller
             }
 
             DB::commit(); // Commit the transaction
-            return redirect()->route('show_manager.shows.configure', $show->id)->with('success', 'Show Manager Created Successfully!');
+            return redirect()->route('show_manager.shows.configure', $show->id)->with('success', 'Seats configuration saved successfully!');
         } catch (\Exception $e) {
             DB::rollback(); // Rollback in case of error
             return redirect()->route('show_manager.shows.configure', $show->id)->with('failure', 'Error saving seats configuration: ' . $e->getMessage());
+        }
+    }
+
+    public function resetSeatsConfiguration(Request $request, $showId)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Disable foreign key checks
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
+            // Delete seats for the specific show
+            ShowSeat::where('show_id', $showId)->delete();
+
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Seats configuration reset successfully!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'An error occurred during reset: ' . $e->getMessage());
         }
     }
 }
