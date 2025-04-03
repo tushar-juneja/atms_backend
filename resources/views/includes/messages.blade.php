@@ -8,12 +8,16 @@
     </div>
 @endif
 
-@if (session()->has('error'))
+@if ($errors->any())
     <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
         <i class="bi bi-x-circle"></i>&nbsp;
-        <div>
-            {{ session()->get('error') }}
-        </div>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>
+                    {{ $error }}
+                </li>
+            @endforeach
+        </ul>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 @endif
