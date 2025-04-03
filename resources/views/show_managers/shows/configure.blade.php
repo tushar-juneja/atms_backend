@@ -57,9 +57,8 @@
                         <button type="button" id="reset-seats" class="btn btn-danger">Reset Configuration</button>
                     </form>
 
-                    <form action="{{ route('show_manager.shows.update_seating_config', $show) }}" method="POST">
+                    <form action="{{ route('show_manager.shows.add_update_seating_config', $show) }}" method="POST">
                         @csrf
-
                         <div class="d-flex w-100 justify-content-center mt-4">
                             <div class="layout d-flex flex-column col-12" style="max-width: 80%;">
                                 <div>
@@ -91,7 +90,7 @@
                                                 <input type="hidden" name="rows[{{ $row }}][balcony]"
                                                     value="1">
                                                 <input type="hidden" name="rows[{{ $row }}][vip]" value="off">
-                                                <input type="number" style="max-width: 150px;"
+                                                <input type="text" style="max-width: 150px;"
                                                     name="rows[{{ $row }}][price]" class="row-price form-control"
                                                     data-row="{{ $row }}"
                                                     placeholder="Row {{ $row }} Price"
@@ -133,7 +132,7 @@
                                                 <input type="hidden" name="rows[{{ $row }}][balcony]"
                                                     value="0">
                                                 <input type="hidden" name="rows[{{ $row }}][vip]" value="off">
-                                                <input type="number" style="max-width: 150px;"
+                                                <input type="text" style="max-width: 150px;"
                                                     class="row-price form-control" data-row="{{ $row }}"
                                                     name="rows[{{ $row }}][price]"
                                                     placeholder="Row {{ $row }} Price"
@@ -192,6 +191,7 @@
                     const seatIcons = $(`.seat-icon[data-row="${row}"]`);
 
                     if (!isVip) {
+                        rowPriceInput.val('0.00'); // Set price to 0
                         rowPriceInput.prop('disabled', true);
                         seatIcons.addClass('vip-row').off('mouseenter mouseleave click');
                     } else {

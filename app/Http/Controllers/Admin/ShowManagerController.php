@@ -64,7 +64,6 @@ class ShowManagerController extends Controller
         return $rowsWithOneSeat;
     }
 
-
     public function configureShow(Show $show)
     {
         $config = config('auditorium');
@@ -83,10 +82,11 @@ class ShowManagerController extends Controller
         if ($allSeats->isNotEmpty()) {
             $rows = $this->getSeatRowConfiguration($allSeats);
         }
+
         return view('show_managers.shows.configure', compact('show', 'config', 'rows'));
     }
 
-    public function addSeatingConfiguration(Request $request, Show $show)
+    public function addUpdateSeatingConfiguration(Request $request, Show $show)
     {
         // 1. Validation
 
@@ -98,10 +98,6 @@ class ShowManagerController extends Controller
             'rows.*.vip' => 'required|in:on,off',
         ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json(['errors' => $validator->errors()], 422);
-        // }
-
         // 2. Process and Store Data with Eloquent
         $rows = $request->input('rows');
 
@@ -111,19 +107,26 @@ class ShowManagerController extends Controller
             $seat = 1;
             foreach ($rows as $rowData) {
                 for ($i = 0; $i < $config['seats_per_row']; $i++) {
-                    ShowSeat::create([
+                    $conditions = [
                         'show_id' => $show->id,
                         'seat_id' => $seat++,
+                    ];
+
+                    // Define the data to update or create
+                    $data = [
                         'seat_type' => $rowData['balcony'] ? 'balcony' : 'ordinary',
                         'price' => $rowData['price'] ?? 0,
                         'is_reserved' => $rowData['vip'] == 'on' ? 1 : 0,
-                    ]);
+                    ];
+
+                    ShowSeat::updateOrCreate($conditions, $data);
                 }
             }
 
             DB::commit(); // Commit the transaction
             return redirect()->route('show_manager.shows.configure', $show->id)->with('success', 'Seats configuration saved successfully!');
         } catch (\Exception $e) {
+            dd($e);
             DB::rollback(); // Rollback in case of error
             return redirect()
                 ->route('show_manager.shows.configure', $show->id)
