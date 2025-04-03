@@ -86,21 +86,21 @@ class ShowManagerController extends Controller
         return view('show_managers.shows.configure', compact('show', 'config', 'rows'));
     }
 
-    public function updateSeatingConfiguration(Request $request, Show $show)
+    public function addSeatingConfiguration(Request $request, Show $show)
     {
         // 1. Validation
 
         $config = config('auditorium');
 
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'rows.*.balcony' => 'required|in:0,1',
             'rows.*.price' => 'nullable|numeric|required_if:rows.*.vip,off',
             'rows.*.vip' => 'required|in:on,off',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors()], 422);
+        // }
 
         // 2. Process and Store Data with Eloquent
         $rows = $request->input('rows');
@@ -127,7 +127,7 @@ class ShowManagerController extends Controller
             DB::rollback(); // Rollback in case of error
             return redirect()
                 ->route('show_manager.shows.configure', $show->id)
-                ->with('failure', 'Error saving seats configuration: ' . $e->getMessage());
+                ->with('error', 'Error saving seats configuration: ' . $e->getMessage());
         }
     }
 
