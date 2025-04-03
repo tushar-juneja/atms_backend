@@ -95,7 +95,7 @@
                                                     name="rows[{{ $row }}][price]" class="row-price form-control"
                                                     data-row="{{ $row }}"
                                                     placeholder="Row {{ $row }} Price"
-                                                    value="{{ $rows[$row]['price'] ?? '' }}">
+                                                    value="{{ $rows[$row]['price'] ?? '' }}" required>
                                                 <input type="checkbox" class="row-vip form-check-input"
                                                     name="rows[{{ $row }}][vip]" data-row="{{ $row }}"
                                                     data-bs-toggle="tooltip" title="Mark Row for VIP"
@@ -137,7 +137,7 @@
                                                     class="row-price form-control" data-row="{{ $row }}"
                                                     name="rows[{{ $row }}][price]"
                                                     placeholder="Row {{ $row }} Price"
-                                                    value="{{ $rows[$row]['price'] ?? '' }}">
+                                                    value="{{ $rows[$row]['price'] ?? '' }}" required>
                                                 <input type="checkbox" class="row-vip form-check-input"
                                                     name="rows[{{ $row }}][vip]" data-row="{{ $row }}"
                                                     data-toggle="tooltip" title="Mark Row for VIP"
