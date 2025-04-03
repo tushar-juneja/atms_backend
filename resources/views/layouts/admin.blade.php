@@ -51,6 +51,19 @@
             background-color: #f5f8fa;
         }
 
+        .topnav-header {
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            height: 60px;
+            top: 0;
+        }
+
+        #layoutSidenav {
+            height: calc(100vh - 60px);
+            margin-top: 50px; 
+        }
+
         .card {
             box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
             border: none;
@@ -63,7 +76,8 @@
 
         .sidebar {
             width: 250px;
-            height: 100vh;
+            position: fixed;
+            height: 100vh !important;
             background-color: #343a40;
             /* Dark background */
             padding: 15px;
@@ -92,6 +106,13 @@
             color: white;
             font-weight: bold;
         }
+
+        .main-container {
+            margin-left: 250px;
+            width: 100%;
+            overflow-y: scroll;
+            padding-block: 60px;
+        }
     </style>
     @yield('styles')
 </head>
@@ -109,7 +130,7 @@
         @include('layouts.partials.sidebar')
         <!-- End Sidebar-->
 
-        <div class="w-100" style="padding-top: 40px;">
+        <div class="main-container">
             <main class="main">
                 <div class="container-fluid">
 

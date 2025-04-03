@@ -1,4 +1,4 @@
-<nav class="sidebar bg-dark text-white vh-100 p-3" style="width: 250px;">
+<nav class="sidebar bg-dark text-white vh-100 p-3">
     <ul class="nav flex-column">
         <li class="nav-item">
             <a class="nav-link text-white" href="#">Dashboard</a>
