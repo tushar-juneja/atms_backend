@@ -30,4 +30,9 @@ class HomeController extends Controller
 
         return view('frontend.index', compact('publishedShows'));
     }
+
+    public function showEventDetails(Show $show)
+    {
+        return view('frontend.show_details', compact('show'));
+    }
 }
