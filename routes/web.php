@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\AudiSecController;
 use App\Http\Controllers\Admin\ShowManagerController;
 use App\Http\Controllers\ProfileController;
@@ -21,6 +22,8 @@ Route::get('/dashboard', function () {
     // return Inertia::render('Dashboard');
     return view('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
