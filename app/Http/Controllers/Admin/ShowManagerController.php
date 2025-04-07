@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Show;
-use App\Models\ShowSeat; // Import the model
+use App\Models\ShowSeat;
+use App\Models\ShowDiscount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -82,8 +83,10 @@ class ShowManagerController extends Controller
         if ($allSeats->isNotEmpty()) {
             $rows = $this->getSeatRowConfiguration($allSeats);
         }
+        
+        $coupon = $show->coupon;
 
-        return view('show_managers.shows.configure', compact('show', 'config', 'rows'));
+        return view('show_managers.shows.configure', compact('show', 'config', 'rows', 'coupon'));
     }
 
     public function addUpdateSeatingConfiguration(Request $request, Show $show)
@@ -156,5 +159,27 @@ class ShowManagerController extends Controller
                 ->back()
                 ->with('error', 'An error occurred during reset: ' . $e->getMessage());
         }
+    }
+
+    public function addUpdateCouponConfiguration(Request $request, Show $show)
+    {
+        $request->validate([
+            'discount_amount' => 'required|numeric|min:0',
+            'minimum_cart_value' => 'required|numeric|min:0',
+        ]);
+
+        ShowDiscount::updateOrCreate(
+            ['show_id' => $show->id],
+            [
+                'discount_amount' => $request['discount_amount'],
+                'minimum_cart_value' => $request['minimum_cart_value'],
+            ],
+        );
+
+        return redirect()->route('show_manager.shows.configure', $show->id)->with('success', 'Coupon settings updated successfully.');
+    }
+
+    public function removeCouponConfiguration(Request $request, Show $show) {
+        
     }
 }

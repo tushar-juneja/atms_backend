@@ -29,4 +29,8 @@ class Show extends Model
     public function seats() {
         return $this->hasMany(ShowSeat::class);
     }
+
+    public function coupon() {
+        return $this->hasOne(ShowDiscount::class);
+    }
 }

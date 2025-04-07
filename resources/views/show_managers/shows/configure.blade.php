@@ -98,7 +98,7 @@
                                                 <input type="checkbox" class="row-vip form-check-input"
                                                     name="rows[{{ $row }}][vip]" data-row="{{ $row }}"
                                                     data-bs-toggle="tooltip" title="Mark Row for VIP"
-                                                    {{ ($rows[$row]['is_reserved'] ?? false) ? 'checked' : '' }}>
+                                                    {{ $rows[$row]['is_reserved'] ?? false ? 'checked' : '' }}>
                                             </div>
                                             @php $row++; @endphp
 
@@ -140,7 +140,7 @@
                                                 <input type="checkbox" class="row-vip form-check-input"
                                                     name="rows[{{ $row }}][vip]" data-row="{{ $row }}"
                                                     data-toggle="tooltip" title="Mark Row for VIP"
-                                                    {{ ($rows[$row]['is_reserved'] ?? false) ? 'checked' : '' }}>
+                                                    {{ $rows[$row]['is_reserved'] ?? false ? 'checked' : '' }}>
                                             </div>
                                             @php $row++; @endphp
                                         </div>
@@ -162,6 +162,44 @@
             </div>
         </div>
     </div>
+
+
+    <div class="card container mt-3">
+        <div class="card-body">
+            <div class="container">
+                <div class="row justify-content-center mt-3 mb-3">
+                    <h4>Coupon settings for <strong><em>{{ $show->name }}</em></strong></h4>
+                    <h5 class="text-center mt-3">Coupons Configuration</h5>
+                        <form method="POST" action="{{ route('show_manager.shows.add_update_discount_config', $show->id) }}">
+                            @csrf
+
+                            <div class="mb-3">
+                                <label for="discount_amount" class="form-label">{{ __('Discount Amount') }}</label>
+                                <input type="number" class="form-control @error('discount_amount') is-invalid @enderror"
+                                    id="discount_amount" name="discount_amount" value="{{ $coupon->discount_amount ?? '' }}" step="0.01"
+                                    min="0" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="minimum_cart_value" class="form-label">{{ __('Minimum Cart Value') }}</label>
+                                <input type="number" class="form-control @error('minimum_cart_value') is-invalid @enderror"
+                                    id="minimum_cart_value" name="minimum_cart_value" value="{{ $coupon->minimum_cart_value ?? '' }}" step="0.01"
+                                    min="0" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">{{ __('Update Settings') }}</button>
+                        </form>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
 @endsection
 
 @section('scripts')
@@ -173,8 +211,9 @@
 
                 $.each(reservedRows, function(rowIdentifier, rowConfig) {
                     // Target the row's price input and disable it
-                    if(rowConfig.is_reserved) {
-                        $('input[data-row="' + rowIdentifier + '"][name$="[price]"]').prop('disabled', true);
+                    if (rowConfig.is_reserved) {
+                        $('input[data-row="' + rowIdentifier + '"][name$="[price]"]').prop('disabled',
+                            true);
                         $('span.seat-icon[data-row="' + rowIdentifier + '"]')
                             .addClass('vip-row') // Add your 'vip-row' class for styling
                             .off('mouseenter mouseleave click'); // Disable any hover/click interactions
@@ -186,7 +225,9 @@
                 const row = $(this).data('row');
                 const isVip = $(this).attr('checked');
 
-                if (confirm(`Are you sure you want to ${isVip ? 'unreserve' : 'reserve'} all seats of row ${row}?`)) {
+                if (confirm(
+                        `Are you sure you want to ${isVip ? 'unreserve' : 'reserve'} all seats of row ${row}?`
+                    )) {
                     const rowPriceInput = $(`.row-price[data-row="${row}"]`);
                     const seatIcons = $(`.seat-icon[data-row="${row}"]`);
 

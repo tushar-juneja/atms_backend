@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/shows/{show}/configure', [ShowManagerController::class, 'configureShow'])->name('show_manager.shows.configure');
         Route::post('/admin/shows/{show}/configure', [ShowManagerController::class, 'addSeatingConfiguration'])->name('show_manager.shows.add_update_seating_config');
 
+        Route::post('/admin/shows/{show}/coupons/configure', [ShowManagerController::class, 'addUpdateCouponConfiguration'])->name('show_manager.shows.add_update_discount_config');
+
         Route::delete('/admins/shows/{show}/reset-seats', [ShowManagerController::class, 'resetSeatsConfiguration'])->name('show_manager.shows.reset_seats_config');
     });
 });
