@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SpectatorController;
 use App\Http\Controllers\Admin\AudiSecController;
 use App\Http\Controllers\Admin\ShowManagerController;
 use App\Http\Controllers\ProfileController;
@@ -21,7 +22,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     // return Inertia::render('Dashboard');
     return view('home');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/events/{show}', [HomeController::class, 'showEventDetails'])->name('shows.show');
@@ -31,6 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::middleware('role:spectator')->group(function () {
+        Route::get('/tickets/history', [SpectatorController::class, 'listPurchases'])->name('purchases.index');
+        Route::get('/purchases/{id}/tickets', [SpectatorController::class, 'showPastPurchase'])->name('purchases.tickets');
+    });
 
     Route::middleware(['roleRedirect', 'role:audi_sec'])->group(function () {
         Route::get('/admin/shows', [AudiSecController::class, 'listShows'])->name('admin.shows.index');
@@ -41,7 +48,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/admin/shows/create', [AudiSecController::class, 'storeShow'])->name('admin.shows.store');
         Route::get('/admin/shows/{id}/update', [AudiSecController::class, 'editShow'])->name('admin.shows.edit');
         Route::put('/admin/shows/{id}', [AudiSecController::class, 'updateShow'])->name('admin.shows.update');
-        
 
         Route::get('/admin/show-managers', [AudiSecController::class, 'listShowManagers'])->name('admin.show_managers.index');
 
@@ -66,4 +72,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
