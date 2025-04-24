@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Models\Show;
+use App\Models\User;
 use App\Models\ShowSeat;
 use App\Models\Ticket;
 use App\Models\Purchase;
@@ -16,21 +17,41 @@ use Illuminate\Support\Facades\DB;
 
 class SpectatorController extends Controller
 {
-    public function listPurchases()
+    public function listPurchases(Request $request)
     {
-        $user = Auth::user();
-
         // Fetch all purchases associated with the logged-in user, ordered by purchase date (descending)
-
-        $purchases = Purchase::with(['tickets.showSeat.show'])
-            ->where('user_id', $user->id)
+        try {
+        $purchases = Purchase::with(['tickets.showSeat'])
+            ->where('user_id', $request->user_id)
             ->whereHas('tickets.showSeat.show', function ($query) {
-                $query->where('date', '<', Carbon::now());
+                $query->where('date_time', '<', Carbon::now());
             })
             ->orderBy('purchase_date', 'desc')
             ->get();
 
-        return view('frontend.tickets_history', compact('purchases'));
+
+        // Format the data for the response
+        $formattedPurchases = $purchases->map(function ($purchase) {
+            $show = $purchase->tickets()->first()->showSeat->first()->show;
+            return [
+                'purchase_id' => $purchase->id,
+                'purchase_date' => $purchase->purchase_date,
+                'original_amount' => $purchase->original_amount,
+                'final_amount' => $purchase->final_amount,
+                'show' => $show,
+                'tickets' => $purchase->tickets->map(function ($ticket) {
+                    return $ticket->showSeat;
+                }),
+                ];
+            });
+
+            // return response()->json($formattedPurchases, 200, [], JSON_PRETTY_PRINT); // for seeing the json in a readable format
+            return response()->json($formattedPurchases, 200);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching user tickets: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to fetch user tickets: ' . $e->getMessage()], 500);
+        }
+        // return view('frontend.tickets_history', compact('purchases'));
     }
 
     public function showPastPurchase($id)

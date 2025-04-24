@@ -33,11 +33,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::middleware('role:spectator')->group(function () {
-        Route::get('/tickets/history', [SpectatorController::class, 'listPurchases'])->name('purchases.index');
-        Route::get('/purchases/{id}/tickets', [SpectatorController::class, 'showPastPurchase'])->name('purchases.tickets');
-    });
-
     Route::middleware(['roleRedirect', 'role:audi_sec'])->group(function () {
         Route::get('/admin/shows', [AudiSecController::class, 'listShows'])->name('admin.shows.index');
     });
@@ -56,7 +51,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/show-managers/{id}/update', [AudiSecController::class, 'editShowManager'])->name('admin.show_managers.edit');
         Route::put('/admin/show-managers/{id}', [AudiSecController::class, 'updateShowManager'])->name('admin.show_managers.update');
     });
-
+    
     Route::middleware(['roleRedirect', 'role:show_manager'])->group(function () {
         Route::get('/admin/shows', [ShowManagerController::class, 'listShows'])->name('admin.shows.index');
     });
