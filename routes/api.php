@@ -32,9 +32,9 @@ Route::group(['middleware' => ['web']], function () {
 });
 
             Route::get('/send/mail', function() {
-                $purchase = App\Models\Purchase::with(['tickets.showSeat.show'])->find(9); // Fetch the purchase with tickets and show details
-                Mail::to(env('MAIL_TO'))->send(new BookingConfirmationMail($purchase)); // Send confirmation email
-                dd($purchase);
+                $purchase = App\Models\Purchase::with(['tickets.showSeat.show'])->find(14); // Fetch the purchase with tickets and show details
+                // Mail::to(env('MAIL_TO'))->send(new BookingConfirmationMail($purchase)); // Send confirmation email
+                // dd($purchase->tickets()->first()->showSeat->first());
             });
         //     Route::get('/send/mail', function() {
         //         // $purchase = App\Models\Purchase::first(); // Fetch the purchase you want to send the email for

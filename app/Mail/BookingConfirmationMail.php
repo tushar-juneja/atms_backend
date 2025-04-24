@@ -40,12 +40,16 @@ class BookingConfirmationMail extends Mailable
         if($ticket->seat_type == 'ordinary') {
             $actualSeat = $ticket->seat_id - 100;
             $row = chr(ord('A') + (intdiv($actualSeat, 20)));
-            $seat = $actualSeat % 20;
-            return [
-                'row' => $row,
-                'seat' => $seat,
-            ];
+        } else {
+            $actualSeat = $ticket->seat_id;
+            $row = chr(ord('K') + (intdiv($actualSeat, 20)));
         }
+        $seat = $actualSeat % 20;
+        return [
+            'row' => $row,
+            'seat' => $seat,
+        ];
+        // }
     }
 
     private function getRowAndSeat() {

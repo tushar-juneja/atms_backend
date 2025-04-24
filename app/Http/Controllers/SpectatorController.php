@@ -176,7 +176,7 @@ class SpectatorController extends Controller
             foreach ($request['seats'] as $seatData) {
                 // Find the show_seat_id.  Important to use the seat_id from the request.
                 $showSeat = DB::table('show_seats')
-                    ->where('show_id', $request['show_id'])->where('seat_id', $seatData['seat_id'])
+                    ->where('show_id', $request['show_id'])->where('seat_id', $seatData['seat_id'])->where('seat_type', $seatData['type'])
                     ->first();
 
                 if (!$showSeat) {
