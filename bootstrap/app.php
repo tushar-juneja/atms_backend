@@ -28,10 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function(Middleware $middleware) {
         // $middleware->statefulApi();
 
-        // $middleware->alias([
-        //     'role' => Role::class,
-        //     'roleRedirect' => RoleBasedRedirect::class,
-        // ]);
+        $middleware->alias([
+            'role' => Role::class,
+            'roleRedirect' => RoleBasedRedirect::class,
+        ]);
 
         //
     })

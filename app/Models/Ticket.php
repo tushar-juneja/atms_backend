@@ -12,6 +12,8 @@ class Ticket extends Model
     protected $fillable = [
         'purchase_id',
         'show_seat_id',
+        'created_at',
+        'updated_at'
     ];
 
     public function purchase()
