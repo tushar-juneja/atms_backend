@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BookingConfirmationMail; // Import your Mail class
+
 
 class SpectatorController extends Controller
 {
@@ -194,6 +197,10 @@ class SpectatorController extends Controller
 
             // 5. Commit the transaction
             DB::commit();
+
+            $purchase = Purchase::with(['tickets.showSeat.show'])->find($purchase->id); // Fetch the purchase with tickets and show details
+
+            Mail::to(env('MAIL_TO'))->send(new BookingConfirmationMail($purchase)); // Send confirmation email
 
             // 6. Return a success response
             return response()->json([
