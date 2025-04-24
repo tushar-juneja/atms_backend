@@ -18,17 +18,19 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Fetch published shows ordered by date and time.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function shows()
     {
         $publishedShows = Show::where('published', true)
             ->orderBy('date_time', 'desc')
-            ->get();
+            ->get()->toArray();
 
-        return view('frontend.index', compact('publishedShows'));
+        return response()->json([$publishedShows]);
+        
+        // return view('frontend.index', compact('publishedShows'));
     }
 
     public function showEventDetails(Show $show)

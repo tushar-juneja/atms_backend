@@ -26,7 +26,6 @@ Route::get('/dashboard', function () {
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/events/{show}', [HomeController::class, 'showEventDetails'])->name('shows.show');
 
 Route::middleware('auth')->group(function () {
