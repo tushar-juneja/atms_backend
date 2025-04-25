@@ -26,18 +26,12 @@ Route::get('/dashboard', function () {
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/events/{show}', [HomeController::class, 'showEventDetails'])->name('shows.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::middleware('role:spectator')->group(function () {
-        Route::get('/tickets/history', [SpectatorController::class, 'listPurchases'])->name('purchases.index');
-        Route::get('/purchases/{id}/tickets', [SpectatorController::class, 'showPastPurchase'])->name('purchases.tickets');
-    });
 
     Route::middleware(['roleRedirect', 'role:audi_sec'])->group(function () {
         Route::get('/admin/shows', [AudiSecController::class, 'listShows'])->name('admin.shows.index');
@@ -57,14 +51,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/show-managers/{id}/update', [AudiSecController::class, 'editShowManager'])->name('admin.show_managers.edit');
         Route::put('/admin/show-managers/{id}', [AudiSecController::class, 'updateShowManager'])->name('admin.show_managers.update');
     });
-
+    
     Route::middleware(['roleRedirect', 'role:show_manager'])->group(function () {
         Route::get('/admin/shows', [ShowManagerController::class, 'listShows'])->name('admin.shows.index');
     });
 
     Route::middleware('role:show_manager')->group(function () {
         Route::get('/admin/shows/{show}/configure', [ShowManagerController::class, 'configureShow'])->name('show_manager.shows.configure');
-        Route::post('/admin/shows/{show}/configure', [ShowManagerController::class, 'addSeatingConfiguration'])->name('show_manager.shows.add_update_seating_config');
+        Route::post('/admin/shows/{show}/configure', [ShowManagerController::class, 'addUpdateSeatingConfiguration'])->name('show_manager.shows.add_update_seating_config');
 
         Route::post('/admin/shows/{show}/coupons/configure', [ShowManagerController::class, 'addUpdateCouponConfiguration'])->name('show_manager.shows.add_update_discount_config');
 
