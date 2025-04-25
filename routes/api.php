@@ -16,8 +16,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/register', [AuthController::class, 'register']);
 
     Route::group(['middleware' => ['auth:sanctum']], function () {
-        Route::get('/logout', [AuthController::class, 'logout']);
-        Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/user', [AuthController::class, 'user']);
         Route::post('/purchase/tickets', [SpectatorController::class, 'purchaseTickets'])->name('show.purchase.tickets');
 
         Route::post('/tickets/history', [SpectatorController::class, 'listPurchases'])->name('purchases.index');
