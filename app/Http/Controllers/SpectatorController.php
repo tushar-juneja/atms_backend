@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingConfirmationMail; // Import your Mail class
+use App\Mail\BookingCancellationMail; // Import your Mail class
 
 
 class SpectatorController extends Controller
@@ -41,6 +42,8 @@ class SpectatorController extends Controller
                 'purchase_date' => $purchase->purchase_date,
                 'original_amount' => $purchase->original_amount,
                 'final_amount' => $purchase->final_amount,
+                'status' => $purchase->status,
+                'refund_amount' => $purchase->refund_amount,
                 'show' => $show,
                 'tickets' => $purchase->tickets->map(function ($ticket) {
                     return $ticket->showSeat;
@@ -74,22 +77,14 @@ class SpectatorController extends Controller
     {
         $show = Show::with(['seats'])->findOrFail($showId);
 
-        // Get IDs of show seats that have been booked (from tickets table)
         $bookedSeatIds = Ticket::whereHas('showSeat', function ($query) use ($showId) {
             $query->where('show_id', $showId);
         })
-            ->pluck('show_seat_id')
-            ->toArray();
-
-        // Map seat data with VIP and booked status
-        $seats = $show->seats->map(function ($seat) use ($bookedSeatIds) {
-            return [
-                'seat_id' => $seat->seat_id,
-                'price' => $seat->price,
-                'is_vip' => $seat->is_reserved,
-                'is_booked' => in_array($seat->id, $bookedSeatIds),
-            ];
-        });
+        ->whereHas('purchase', function($query) {
+            $query->where('status', '!=', 'cancelled');
+        })
+        ->pluck('show_seat_id')
+        ->toArray();
 
         // Separate ordinary and balcony seats
         $ordinarySeats = [];
@@ -218,5 +213,43 @@ class SpectatorController extends Controller
             \Log::error('Error purchasing tickets: ' . $e->getMessage()); // Log the error
             return response()->json(['error' => 'Failed to purchase tickets: ' . $e->getMessage()], 500); // Return a user-friendly error message
         }
+    }
+
+    public function cancelPurchase(Request $request)
+    {
+        return DB::transaction(function () use ($request) {
+            $purchase = Purchase::with('tickets.showSeat.show', 'user')
+                ->findOrFail($request['purchase_id']); // Eager load relations, include user
+
+            $totalTicketPrice = 0;
+            $now = Carbon::now();
+
+            // Calculate the total price of all tickets in the purchase
+            foreach ($purchase->tickets as $ticket) {
+                $totalTicketPrice += $ticket->showSeat->price; // Access price through the showSeat relationship
+            }
+            $showTime = Carbon::parse($purchase->tickets->first()->showSeat->show->date_time);
+            $diffInHours = $now->diffInHours($showTime);
+            // Calculate refund amount based on cancellation time
+            if ($diffInHours < 24) {
+                $refundPercentage = 0.5; // 50% refund
+            } elseif ($diffInHours < 48) {
+                $refundPercentage = 0.75; // 75% refund
+            } else {
+                $refundPercentage = 1; // 100% refund
+            }
+            $totalRefundAmount = $totalTicketPrice * $refundPercentage;
+            $purchase->status = 'cancelled'; // Update purchase status
+            $purchase->refund_amount = $totalRefundAmount; // Store the refund
+            $purchase->save();
+
+            // Send cancellation email
+            Mail::to(env('MAIL_TO'))->send(new BookingCancellationMail($purchase, $totalRefundAmount));
+
+            return response()->json([
+                'message' => 'Your purchase has been cancelled.',
+                'refund_amount' => $totalRefundAmount,
+            ]); // Return JSON for API
+        }); // Commit or rollback
     }
 }
