@@ -95,6 +95,8 @@ class SpectatorController extends Controller
         $ordinarySeats = [];
         $balconySeats = [];
 
+        $discount = $show->coupon;
+
         foreach ($show->seats as $seat) {
             $seatData = [
                 'seat_id' => $seat->seat_id,
@@ -117,6 +119,8 @@ class SpectatorController extends Controller
                 'date' => $show->date,
                 'time' => $show->time,
                 'artist' => $show->artist,
+                'discount_amount' => $discount ? $discount->discount_amount : null,
+                'discount_min_cart_value' => $discount ? $discount->minimum_cart_value : null,
             ],
             'seats' => [
                 'ordinary' => $ordinarySeats,
@@ -163,10 +167,9 @@ class SpectatorController extends Controller
             $purchase = Purchase::create([
                 'user_id' => $request['user_id'],
                 'purchase_date' => now(),
-                'original_amount' => $request['amount'],
-                'final_amount' => 0,
-                'show_discount_id' => null
-                // 'final_amount' => $request['final_amount'],
+                'original_amount' => $request['original_amount'],
+                'final_amount' => $request['final_amount'],
+                'show_discount_id' => null,
                 // 'show_discount_id' => $request['show_discount_id'] ?? null,
             ]);
 

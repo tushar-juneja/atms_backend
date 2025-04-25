@@ -82,7 +82,11 @@
             @endforeach
         </div>
 
-        <p class="total">Total: ${{ $purchase->final_amount }}</p>
+        <div class="amount-info">
+            <p>Original Amount: ₹{{ number_format($purchase->original_amount, 2) }}</p>
+            <p>Discount Amount: ₹{{ number_format($purchase->original_amount - $purchase->final_amount, 2) }}</p>
+            <p class="total">Total: ₹{{ number_format($purchase->final_amount, 2) }}</p>
+        </div>
 
         <p>Please keep this email for your records. If you have any questions, please contact us.</p>
     </div>
