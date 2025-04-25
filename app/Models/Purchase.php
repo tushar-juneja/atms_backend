@@ -9,7 +9,7 @@ class Purchase extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'purchase_date', 'show_discount_id', 'original_amount', 'final_amount'];
+    protected $fillable = ['user_id', 'purchase_date', 'show_discount_id', 'original_amount', 'final_amount', 'status', 'refund_amount'];
 
     protected $casts = [
         'purchase_date' => 'datetime',
